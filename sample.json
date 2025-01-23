@@ -1,0 +1,183 @@
+[
+  {
+    "0": {
+      "name": "Ascendant",
+      "fullDegree": 118.56449107988223,
+      "normDegree": 28.56449107988223,
+      "isRetro": "false",
+      "current_sign": 4
+    },
+    "1": {
+      "name": "Sun",
+      "fullDegree": 350.1229578477906,
+      "normDegree": 20.122957847790587,
+      "isRetro": "false",
+      "current_sign": 12
+    },
+    "2": {
+      "name": "Moon",
+      "fullDegree": 81.55217737000706,
+      "normDegree": 21.55217737000706,
+      "isRetro": "false",
+      "current_sign": 3
+    },
+    "3": {
+      "name": "Mars",
+      "fullDegree": 359.3294354040992,
+      "normDegree": 29.329435404099172,
+      "isRetro": "false",
+      "current_sign": 12
+    },
+    "4": {
+      "name": "Mercury",
+      "fullDegree": 354.9062337475901,
+      "normDegree": 24.90623374759008,
+      "isRetro": "true",
+      "current_sign": 12
+    },
+    "5": {
+      "name": "Jupiter",
+      "fullDegree": 320.0397951421004,
+      "normDegree": 20.039795142100388,
+      "isRetro": "false",
+      "current_sign": 11
+    },
+    "6": {
+      "name": "Venus",
+      "fullDegree": 303.78653289265327,
+      "normDegree": 3.7865328926532698,
+      "isRetro": "false",
+      "current_sign": 11
+    },
+    "7": {
+      "name": "Saturn",
+      "fullDegree": 358.2970315611809,
+      "normDegree": 28.297031561180916,
+      "isRetro": "false",
+      "current_sign": 12
+    },
+    "8": {
+      "name": "Rahu",
+      "fullDegree": 134.97785411172913,
+      "normDegree": 14.97785411172913,
+      "isRetro": "true",
+      "current_sign": 5
+    },
+    "9": {
+      "name": "Ketu",
+      "fullDegree": 314.97785411172913,
+      "normDegree": 14.97785411172913,
+      "isRetro": "true",
+      "current_sign": 11
+    },
+    "10": {
+      "name": "Uranus",
+      "fullDegree": 288.14697261815314,
+      "normDegree": 18.146972618153143,
+      "isRetro": "false",
+      "current_sign": 10
+    },
+    "11": {
+      "name": "Neptune",
+      "fullDegree": 278.07575783359636,
+      "normDegree": 8.075757833596356,
+      "isRetro": "false",
+      "current_sign": 10
+    },
+    "12": {
+      "name": "Pluto",
+      "fullDegree": 224.05839328860677,
+      "normDegree": 14.058393288606766,
+      "isRetro": "true",
+      "current_sign": 8
+    },
+    "13": {
+      "name": "ayanamsa",
+      "value": 23.828616092889867
+    },
+    "debug": {
+      "observation_point": "topocentric",
+      "ayanamsa": "lahiri"
+    }
+  },
+  {
+    "Ascendant": {
+      "current_sign": 4,
+      "fullDegree": 118.56449107988223,
+      "normDegree": 28.56449107988223,
+      "isRetro": "false"
+    },
+    "Sun": {
+      "current_sign": 12,
+      "fullDegree": 350.1229578477906,
+      "normDegree": 20.122957847790587,
+      "isRetro": "false"
+    },
+    "Moon": {
+      "current_sign": 3,
+      "fullDegree": 81.55217737000706,
+      "normDegree": 21.55217737000706,
+      "isRetro": "false"
+    },
+    "Mars": {
+      "current_sign": 12,
+      "fullDegree": 359.3294354040992,
+      "normDegree": 29.329435404099172,
+      "isRetro": "false"
+    },
+    "Mercury": {
+      "current_sign": 12,
+      "fullDegree": 354.9062337475901,
+      "normDegree": 24.90623374759008,
+      "isRetro": "true"
+    },
+    "Jupiter": {
+      "current_sign": 11,
+      "fullDegree": 320.0397951421004,
+      "normDegree": 20.039795142100388,
+      "isRetro": "false"
+    },
+    "Venus": {
+      "current_sign": 11,
+      "fullDegree": 303.78653289265327,
+      "normDegree": 3.7865328926532698,
+      "isRetro": "false"
+    },
+    "Saturn": {
+      "current_sign": 12,
+      "fullDegree": 358.2970315611809,
+      "normDegree": 28.297031561180916,
+      "isRetro": "false"
+    },
+    "Rahu": {
+      "current_sign": 5,
+      "fullDegree": 134.97785411172913,
+      "normDegree": 14.97785411172913,
+      "isRetro": "true"
+    },
+    "Ketu": {
+      "current_sign": 11,
+      "fullDegree": 314.97785411172913,
+      "normDegree": 14.97785411172913,
+      "isRetro": "true"
+    },
+    "Uranus": {
+      "current_sign": 10,
+      "fullDegree": 288.14697261815314,
+      "normDegree": 18.146972618153143,
+      "isRetro": "false"
+    },
+    "Neptune": {
+      "current_sign": 10,
+      "fullDegree": 278.07575783359636,
+      "normDegree": 8.075757833596356,
+      "isRetro": "false"
+    },
+    "Pluto": {
+      "current_sign": 8,
+      "fullDegree": 224.05839328860677,
+      "normDegree": 14.058393288606766,
+      "isRetro": "true"
+    }
+  }
+]
