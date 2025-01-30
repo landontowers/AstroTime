@@ -28,103 +28,6 @@
     const innerRadius = 250; // Create an inner circle for spacing
     const planetRadius = 5;
 
-    // Astrological data
-    const data = [
-        {
-            "0": {
-                "name": "Ascendant",
-                "fullDegree": 118.56449107988223,
-                "normDegree": 28.56449107988223,
-                "isRetro": "false",
-                "current_sign": 4
-            },
-            "1": {
-                "name": "Sun",
-                "fullDegree": 350.1229578477906,
-                "normDegree": 20.122957847790587,
-                "isRetro": "false",
-                "current_sign": 12
-            },
-            "2": {
-                "name": "Moon",
-                "fullDegree": 81.55217737000706,
-                "normDegree": 21.55217737000706,
-                "isRetro": "false",
-                "current_sign": 3
-            },
-            "3": {
-                "name": "Mars",
-                "fullDegree": 359.3294354040992,
-                "normDegree": 29.329435404099172,
-                "isRetro": "false",
-                "current_sign": 12
-            },
-            "4": {
-                "name": "Mercury",
-                "fullDegree": 354.9062337475901,
-                "normDegree": 24.90623374759008,
-                "isRetro": "true",
-                "current_sign": 12
-            },
-            "5": {
-                "name": "Jupiter",
-                "fullDegree": 320.0397951421004,
-                "normDegree": 20.039795142100388,
-                "isRetro": "false",
-                "current_sign": 11
-            },
-            "6": {
-                "name": "Venus",
-                "fullDegree": 303.78653289265327,
-                "normDegree": 3.7865328926532698,
-                "isRetro": "false",
-                "current_sign": 11
-            },
-            "7": {
-                "name": "Saturn",
-                "fullDegree": 358.2970315611809,
-                "normDegree": 28.297031561180916,
-                "isRetro": "false",
-                "current_sign": 12
-            },
-            "8": {
-                "name": "Rahu",
-                "fullDegree": 134.97785411172913,
-                "normDegree": 14.97785411172913,
-                "isRetro": "true",
-                "current_sign": 5
-            },
-            "9": {
-                "name": "Ketu",
-                "fullDegree": 314.97785411172913,
-                "normDegree": 14.97785411172913,
-                "isRetro": "true",
-                "current_sign": 11
-            },
-            "10": {
-                "name": "Uranus",
-                "fullDegree": 288.14697261815314,
-                "normDegree": 18.146972618153143,
-                "isRetro": "false",
-                "current_sign": 10
-            },
-            "11": {
-                "name": "Neptune",
-                "fullDegree": 278.07575783359636,
-                "normDegree": 8.075757833596356,
-                "isRetro": "false",
-                "current_sign": 10
-            },
-            "12": {
-                "name": "Pluto",
-                "fullDegree": 224.05839328860677,
-                "normDegree": 14.058393288606766,
-                "isRetro": "true",
-                "current_sign": 8
-            }
-        }
-    ];
-
     // Astrological glyphs (Unicode)
     const glyphs = {
         "Ascendant": "Asc",
@@ -202,56 +105,148 @@
         ctx.fillText(glyphs[name] || name, x, y - 10);
     }
 
-    // Draw the outer zodiac circle
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, outerRadius, 0, 2 * Math.PI);
-    ctx.strokeStyle = 'black';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
-    // Draw the inner circle
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, innerRadius, 0, 2 * Math.PI);
-    ctx.strokeStyle = 'black';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
-    // Draw zodiac sign divisions
-    for (let i = 0; i < 12; i++) {
-        const angle = i * Math.PI / 6; // 30 degrees in radians
-        const x1 = centerX + outerRadius * Math.cos(angle);
-        const y1 = centerY + outerRadius * Math.sin(angle);
-        const x2 = centerX + innerRadius * Math.cos(angle);
-        const y2 = centerY + innerRadius * Math.sin(angle);
-
+    // Function to draw the zodiac and sign divisions
+    function drawZodiac() {
+        // Draw the outer zodiac circle
         ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-        ctx.strokeStyle = 'gray';
-        ctx.lineWidth = 1;
+        ctx.arc(centerX, centerY, outerRadius, 0, 2 * Math.PI);
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 2;
         ctx.stroke();
 
-        // Add sign glyphs
-        const glyphAngle = (i + 0.5) * Math.PI / 6; // Center of each sign
-        const glyphX = centerX + (outerRadius + 15) * Math.cos(glyphAngle);
-        const glyphY = centerY + (outerRadius + 15) * Math.sin(glyphAngle);
+        // Draw the inner circle
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, innerRadius, 0, 2 * Math.PI);
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 2;
+        ctx.stroke();
 
-        ctx.fillStyle = 'black';
-        ctx.font = '18px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText(signGlyphs[i + 1], glyphX, glyphY);
-    }
+        // Draw zodiac sign divisions
+        for (let i = 0; i < 12; i++) {
+            const angle = i * Math.PI / 6; // 30 degrees in radians
+            const x1 = centerX + outerRadius * Math.cos(angle);
+            const y1 = centerY + outerRadius * Math.sin(angle);
+            const x2 = centerX + innerRadius * Math.cos(angle);
+            const y2 = centerY + innerRadius * Math.sin(angle);
 
-    // Draw the planets
-    for (const planet in data[0]) {
-        if (planet !== 'debug' && planet !== 'ayanamsa') {
-            const planetData = data[0][planet];
-            const angle = (planetData.fullDegree) * Math.PI / 180;
-            const isRetro = planetData.isRetro === "true";
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.strokeStyle = 'gray';
+            ctx.lineWidth = 1;
+            ctx.stroke();
 
-            drawPlanet(-angle, isRetro, planetData.name); // Negative angle for counter-clockwise
+            // Add sign glyphs
+            const glyphAngle = (i + 0.5) * Math.PI / 6; // Center of each sign
+            const glyphX = centerX + (outerRadius + 15) * Math.cos(glyphAngle);
+            const glyphY = centerY + (outerRadius + 15) * Math.sin(glyphAngle);
+
+            ctx.fillStyle = 'black';
+            ctx.font = '18px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(signGlyphs[i + 1], glyphX, glyphY);
         }
     }
+
+    function getCurrentDateTimeAndLocation() {
+        return new Promise((resolve, reject) => {
+            const now = new Date();
+            let dateData = {
+                year: now.getFullYear(),
+                month: now.getMonth() + 1,
+                date: now.getDate(),
+                hours: now.getHours(),
+                minutes: now.getMinutes(),
+                seconds: now.getSeconds(),
+                timezone: -now.getTimezoneOffset() / 60
+            };
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        dateData.latitude = position.coords.latitude;
+                        dateData.longitude = position.coords.longitude;
+                        resolve(dateData);
+                    },
+                    (error) => {
+                        console.error("Geolocation error:", error);
+                        // Default to a location if geolocation fails
+                        dateData.latitude = 34.0522; // Example: Los Angeles
+                        dateData.longitude = -118.2437;
+                        resolve(dateData);
+                    }
+                );
+            } else {
+                console.error("Geolocation is not supported.");
+                // Default to a location if geolocation is not supported
+                dateData.latitude = 34.0522;
+                dateData.longitude = -118.2437;
+                resolve(dateData);
+            }
+        });
+    }
+
+    // Function to fetch astrological data from the API
+    async function getAstroData() {
+
+        const dateTimeLocation = await getCurrentDateTimeAndLocation();
+
+        const requestData = {
+            ...dateTimeLocation,
+            settings: {
+                observation_point: "topocentric",
+                ayanamsha: "lahiri"
+            }
+        };
+
+        //API Endpoint
+        const apiUrl = 'https://json.freeastrologyapi.com/planets';
+
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': 'change me'
+                },
+                body: JSON.stringify(requestData)
+            });
+
+            if (!response.ok) {
+                throw new Error(`API request failed with status ${response.status}`);
+            }
+
+            return await response.json(); // Return the API response data
+
+        } catch (error) {
+            console.error('Error fetching astrological data:', error);
+            return null; // Return null or handle the error appropriately
+        }
+    }
+
+    // Main function to draw the chart
+    async function drawChart() {
+        let astroData = await getAstroData();
+        astroData = astroData.output; // Extract the planets data
+
+        if (astroData) {
+            drawZodiac(); // Draw the zodiac first
+
+            // Draw the planets based on the API response
+            for (const planet in astroData[0]) {
+                if (planet !== 'debug' && planet !== 'ayanamsa') {
+                    const planetData = astroData[0][planet];
+                    const angle = (planetData.fullDegree) * Math.PI / 180;
+                    const isRetro = planetData.isRetro === "true";
+
+                    drawPlanet(-angle, isRetro, planetData.name); // Negative angle for counter-clockwise
+                }
+            }
+        }
+    }
+
+    // Call the main function to draw the chart
+    drawChart();
 </script>
 
 </body>

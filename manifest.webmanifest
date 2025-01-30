@@ -2,7 +2,7 @@
   "name": "AstroTime",
   "short_name": "AstroTime",
   "description": "Calculate your true astrological time",
-  "start_url": "/",
+  "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#3f51b5",

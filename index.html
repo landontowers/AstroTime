@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Astrological Chart</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #f8f8f8;
+        }
+        canvas {
+            display: block;
+            margin: 50px auto;
+            border: 1px solid black;
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="astroChart" width="700" height="700"></canvas>
+
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('service-worker.js')
+                .then(registration => {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                })
+                .catch(error => {
+                    console.error('Service Worker registration failed:', error);
+                });
+        });
+    }
+
+    const canvas = document.getElementById('astroChart');
+    const ctx = canvas.getContext('2d');
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const outerRadius = 300;
+    const innerRadius = 250;
+    const defaultPlanetRadius = 5; // Default radius for planets
+    let longitude;
+    let selectedPlanet = null; // To keep track of the selected planet
+
+    // Glyphs and colors for planets and signs
+    const glyphs = {
+        "Ascendant": "Asc", "Sun": "\u2609", "Moon": "\u263D", "Mars": "\u2642",
+        "Mercury": "\u263F", "Jupiter": "\u2643", "Venus": "\u2640", "Saturn": "\u2644",
+        "Rahu": "\u260A", "Ketu": "\u260B", "Uranus": "\u2645", "Neptune": "\u2646", "Pluto": "\u2647"
+    };
+    const signGlyphs = {
+        1: "\u2648", 2: "\u2649", 3: "\u264A", 4: "\u264B", 5: "\u264C", 6: "\u264D",
+        7: "\u264E", 8: "\u264F", 9: "\u2650", 10: "\u2651", 11: "\u2652", 12: "\u2653"
+    };
+    const planetColors = {
+        "Sun": "#FFA500", "Moon": "#C0C0C0", "Mercury": "#FFFF99", "Venus": "#FFCC99", "Mars": "#FF0000",
+        "Jupiter": "#FF9933", "Saturn": "#CC9966", "Uranus": "#66CCFF", "Neptune": "#3333CC",
+        "Pluto": "#990000", "Rahu": "#808080", "Ketu": "#808080", "Ascendant": "black"
+    };
+
+    // Function to draw a planet
+    function drawPlanet(angle, isRetro, name) {
+        const x = centerX + innerRadius * Math.cos(angle);
+        const y = centerY + innerRadius * Math.sin(angle);
+
+        // Determine the radius based on whether the planet is selected
+        const radius = (selectedPlanet && selectedPlanet.name === name) ? 10 : defaultPlanetRadius;
+
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, 2 * Math.PI);
+
+        if (isRetro) {
+            ctx.fillStyle = 'red';
+            ctx.fill();
+            ctx.strokeStyle = 'red';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(x, y, radius + 3, 0, 2 * Math.PI);
+            ctx.stroke();
+        } else {
+            ctx.fillStyle = planetColors[name] || 'blue';
+            ctx.fill();
+        }
+
+        ctx.fillStyle = 'black';
+        ctx.font = '14px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(glyphs[name] || name, x, y - 10);
+
+        return { x, y, radius, name }; // Return planet's position and data
+    }
+
+    // Function to draw the zodiac and sign divisions
+    function drawZodiac() {
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, outerRadius, 0, 2 * Math.PI);
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, innerRadius, 0, 2 * Math.PI);
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        for (let i = 0; i < 12; i++) {
+            const angle = i * Math.PI / 6;
+            const x1 = centerX + outerRadius * Math.cos(angle);
+            const y1 = centerY + outerRadius * Math.sin(angle);
+            const x2 = centerX + innerRadius * Math.cos(angle);
+            const y2 = centerY + innerRadius * Math.sin(angle);
+
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.strokeStyle = 'gray';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            const glyphAngle = (i + 0.5) * Math.PI / 6;
+            const glyphX = centerX + (outerRadius + 15) * Math.cos(glyphAngle);
+            const glyphY = centerY + (outerRadius + 15) * Math.sin(glyphAngle);
+
+            ctx.fillStyle = 'black';
+            ctx.font = '18px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(signGlyphs[i + 1], glyphX, glyphY);
+        }
+    }
+
+    function getCurrentDateTimeAndLocation() {
+        return new Promise((resolve, reject) => {
+            const now = new Date();
+            let dateData = {
+                year: now.getFullYear(),
+                month: now.getMonth() + 1,
+                date: now.getDate(),
+                hours: now.getHours(),
+                minutes: now.getMinutes(),
+                seconds: now.getSeconds(),
+                timezone: -now.getTimezoneOffset() / 60
+            };
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        dateData.latitude = position.coords.latitude;
+                        dateData.longitude = position.coords.longitude;
+                        longitude = position.coords.longitude;
+                        resolve(dateData);
+                    },
+                    (error) => {
+                        console.error("Geolocation error:", error);
+                        dateData.latitude = 34.0522; // Default: Los Angeles
+                        dateData.longitude = -118.2437;
+                        longitude = -118.2437;
+                        resolve(dateData);
+                    }
+                );
+            } else {
+                console.error("Geolocation is not supported.");
+                dateData.latitude = 34.0522; // Default: Los Angeles
+                dateData.longitude = -118.2437;
+                resolve(dateData);
+            }
+        });
+    }
+
+    async function getAstroData() {
+        const dateTimeLocation = await getCurrentDateTimeAndLocation();
+        const requestData = {
+            ...dateTimeLocation,
+            settings: {
+                observation_point: "topocentric",
+                ayanamsha: "lahiri"
+            }
+        };
+
+        const apiUrl = 'https://json.freeastrologyapi.com/planets';
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': 'change me' // Replace with your actual API key
+                },
+                body: JSON.stringify(requestData)
+            });
+            if (!response.ok) {
+                throw new Error(`API request failed with status ${response.status}`);
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching astrological data:', error);
+            return null;
+        }
+    }
+
+    function calculateEquationOfTime(date) {
+        const dayOfYear = Math.floor((date - new Date(date.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+        const B = (360 * (dayOfYear - 81)) / 365;
+        const equationOfTimeMinutes =
+            9.87 * Math.sin(2 * (B * Math.PI / 180)) -
+            7.53 * Math.cos((B * Math.PI / 180)) -
+            1.5 * Math.sin((B * Math.PI / 180));
+        return equationOfTimeMinutes;
+    }
+
+    function calculateLAT(longitude, standardTime, equationOfTime) {
+        const standardMeridian = Math.floor(longitude / 15) * 15;
+        const longitudeDifference = longitude - standardMeridian;
+        const timeDifferenceMinutes = longitudeDifference * 4;
+
+        let adjustedTime = new Date(standardTime);
+        if (longitudeDifference > 0) {
+            adjustedTime.setMinutes(adjustedTime.getMinutes() + timeDifferenceMinutes);
+        } else {
+            adjustedTime.setMinutes(adjustedTime.getMinutes() - timeDifferenceMinutes);
+        }
+
+        adjustedTime.setMinutes(adjustedTime.getMinutes() + equationOfTime);
+
+        const options = { hour: '2-digit', minute: '2-digit' };
+        const latTime = adjustedTime.toLocaleTimeString('en-US', options);
+        return latTime;
+    }
+
+    async function drawChart() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas before redrawing
+        let astroData = await getAstroData();
+        astroData = astroData.output;
+        let planets = []; // Array to store planet objects
+
+        if (astroData) {
+            drawZodiac();
+
+            for (const planet in astroData[0]) {
+                if (planet !== 'debug' && planet !== 'ayanamsa') {
+                    const planetData = astroData[0][planet];
+                    const angle = (planetData.fullDegree) * Math.PI / 180;
+                    const isRetro = planetData.isRetro === "true";
+                    const planetObj = drawPlanet(-angle, isRetro, planetData.name); // Store planet object
+                    planets.push(planetObj); // Add planet to the array
+                }
+            }
+
+            // Display LAT in the center
+            const standardTime = new Date();
+            const equationOfTimeValue = calculateEquationOfTime(standardTime);
+            const lat = calculateLAT(longitude, standardTime, equationOfTimeValue);
+
+            ctx.fillStyle = 'blue'; // Example color
+            ctx.font = '50px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(lat, centerX, centerY);
+        }
+
+        // Add click event listener to the canvas
+        canvas.addEventListener('click', (event) => {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = event.clientX - rect.left;
+            const mouseY = event.clientY - rect.top;
+
+            // Check if a planet is clicked
+            for (const planet of planets) {
+                const distance = Math.sqrt((mouseX - planet.x) ** 2 + (mouseY - planet.y) ** 2);
+                if (distance <= planet.radius) {
+                    if (selectedPlanet && selectedPlanet.name === planet.name) {
+                        // Deselect the planet if it's already selected
+                        selectedPlanet = null;
+                    } else {
+                        // Select the planet
+                        selectedPlanet = planet;
+                    }
+                    drawChart(); // Redraw the chart to reflect the change
+                    break;
+                }
+            }
+        });
+    }
+
+    drawChart();
+</script>
+
+</body>
+</html>
